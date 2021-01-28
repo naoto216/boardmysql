@@ -24,16 +24,17 @@
         
  	
     <?php
-    $dsn = 'ユーザー名';
-    $user = 'データベース名';
-    $password = 'パスワード';
+    $dsn = 'データベース名';
+    $user = 'ユーザー名';
+    $password = 'パスワード名';
     $pdo = new PDO($dsn, $user, $password, array(PDO::ATTR_ERRMODE => PDO::ERRMODE_WARNING));
     
-    $sql = "CREATE TABLE IF NOT EXISTS tbkeizi"
+    $sql = "CREATE TABLE IF NOT EXISTS tbkeizibasic"
     ." ("
     . "id INT AUTO_INCREMENT PRIMARY KEY,"
     . "name char(32),"
-    . "comment TEXT"
+    . "comment TEXT,"
+    . "date DATETIME"
     .");";
     $stmt = $pdo->query($sql);
     
@@ -41,22 +42,25 @@
           $id = $_POST["hidden"]; 
           $name = $_POST["name"];
           $comment = $_POST["comment"]; 
-          $sql = 'update tbkeizi set name=:name,comment=:comment where id=:id';
+          $date = date("Y/m/d H:m:s");
+          $sql = 'update tbkeizibasic set name=:name,comment=:comment,date=:date where id=:id';
           $stmt = $pdo->prepare($sql);
           $stmt->bindParam(':name', $name, PDO::PARAM_STR);
           $stmt->bindParam(':comment', $comment, PDO::PARAM_STR);
           $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+          $stmt->bindParam(':date', $date, PDO::PARAM_STR);
           $stmt->execute();
         }
           
-     $sql = 'SELECT * FROM tbkeizi';
+     $sql = 'SELECT * FROM tbkeizibasic';
     $stmt = $pdo->query($sql);
     $results = $stmt->fetchAll();
     foreach ($results as $row){
       //$rowの中にはテーブルのカラム名が入る
       echo $row['id'].',';
       echo $row['name'].',';
-      echo $row['comment'].'<br>';
+      echo $row['comment'].',';
+      echo $row['date'].'<br>';
     }
     
     ?>

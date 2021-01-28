@@ -24,34 +24,38 @@
         
  	
     <?php
-    $dsn = 'ユーザー名';
-    $user = 'データベース名';
-    $password = 'パスワード';
+    $dsn = 'データベース名';
+    $user = 'ユーザー名';
+    $password = 'パスワード名';
     $pdo = new PDO($dsn, $user, $password, array(PDO::ATTR_ERRMODE => PDO::ERRMODE_WARNING));
     
-    $sql = "CREATE TABLE IF NOT EXISTS tbkeizi"
+    $sql = "CREATE TABLE IF NOT EXISTS tbkeizibasic"
     ." ("
     . "id INT AUTO_INCREMENT PRIMARY KEY,"
     . "name char(32),"
-    . "comment TEXT"
+    . "comment TEXT,"
+    . "date DATETIME"
     .");";
     $stmt = $pdo->query($sql);
     
-    $sql = $pdo -> prepare("INSERT INTO tbkeizi (name, comment) VALUES (:name, :comment)");
+    $sql = $pdo -> prepare("INSERT INTO tbkeizibasic (name, comment, date) VALUES (:name, :comment, :date)");
     $name = $_POST['name'];
     $comment = $_POST['comment']; 
+    $date = date("Y/m/d H:m:s");   
     $sql -> bindParam(':name', $name, PDO::PARAM_STR);
     $sql -> bindParam(':comment', $comment, PDO::PARAM_STR);
+    $sql -> bindParam(':date', $date, PDO::PARAM_STR);
     $sql -> execute();
     
-    $sql = 'SELECT * FROM tbkeizi';
+    $sql = 'SELECT * FROM tbkeizibasic';
     $stmt = $pdo->query($sql);
     $results = $stmt->fetchAll();
     foreach ($results as $row){
       //$rowの中にはテーブルのカラム名が入る
       echo $row['id'].',';
       echo $row['name'].',';
-      echo $row['comment'].'<br>';
+      echo $row['comment'].',';
+      echo $row['date'].'<br>';
     }
     
     ?>

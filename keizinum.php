@@ -7,29 +7,27 @@
     <body>
  	
     <?php
-    $dsn = 'ユーザー名';
-    $user = 'データベース名';
-    $password = 'パスワード';
+    $dsn = 'データベース名';
+    $user = 'ユーザー名';
+    $password = 'パスワード名';
     $pdo = new PDO($dsn, $user, $password, array(PDO::ATTR_ERRMODE => PDO::ERRMODE_WARNING));
     
-    $sql = "CREATE TABLE IF NOT EXISTS tbkeizi"
+    $sql = "CREATE TABLE IF NOT EXISTS tbkeizibasic"
     ." ("
     . "id INT AUTO_INCREMENT PRIMARY KEY,"
     . "name char(32),"
-    . "comment TEXT"
+    . "comment TEXT,"
+    . "date DATETIME"
     .");";
     $stmt = $pdo->query($sql);
 
     
-    $sql = 'SELECT * FROM tbkeizi';
+    $sql = 'SELECT * FROM tbkeizibasic';
     $stmt = $pdo->query($sql);
     // if(!empty($_POST['hennsyuu'])){
     if($_POST["hennsyuu"] >= 1){
       $results = $stmt->fetchAll();
       foreach ($results as $row){
-        // $lines =(file($filename,FILE_IGNORE_NEW_LINES));
-        // foreach($lines as $line){
-          // $word = explode("<>",$line);
           if($row['id'] == $_POST["hennsyuu"]){
             $num = $row['id'];
             $namae = $row['name'] ;
@@ -61,14 +59,15 @@
     </form>
         
     <?php
-    $sql = 'SELECT * FROM tbkeizi';
+    $sql = 'SELECT * FROM tbkeizibasic';
     $stmt = $pdo->query($sql);
     $results = $stmt->fetchAll();
     foreach ($results as $row){
       //$rowの中にはテーブルのカラム名が入る
       echo $row['id'].',';
       echo $row['name'].',';
-      echo $row['comment'].'<br>';
+      echo $row['comment'].',';
+      echo $row['date'].'<br>';
     }
     
     ?>
